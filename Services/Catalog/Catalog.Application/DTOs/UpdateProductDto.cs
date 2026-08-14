@@ -1,9 +1,13 @@
 using System.ComponentModel.DataAnnotations;
+using Catalog.Core.Entities;
 
 namespace Catalog.Application.DTOs;
 
 public record class UpdateProductDto
 {
+    [Required]
+    public required string Id { get; set; }
+
     [Required]
     public required string Name { get; init; }
 

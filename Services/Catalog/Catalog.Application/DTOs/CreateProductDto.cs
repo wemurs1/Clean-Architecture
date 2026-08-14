@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Catalog.Core.Entities;
 
 namespace Catalog.Application.DTOs;
 

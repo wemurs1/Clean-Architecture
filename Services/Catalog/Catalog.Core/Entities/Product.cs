@@ -13,6 +13,6 @@ public class Product : BaseEntity
     public required ProductType Type { get; set; }
 
     [BsonRepresentation(BsonType.Decimal128)]
-    public decimal Price { get; set; }
-    public DateTimeOffset CreatedDate { get; set; }
+    public required decimal Price { get; set; }
+    public required DateTimeOffset CreatedDate { get; set; }
 }

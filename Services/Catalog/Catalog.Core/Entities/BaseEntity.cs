@@ -7,5 +7,5 @@ public class BaseEntity
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public required string Id { get; set; }
+    public string Id { get; set; } = default!;
 }

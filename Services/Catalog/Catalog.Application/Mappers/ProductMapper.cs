@@ -1,3 +1,4 @@
+using Catalog.Application.DTOs;
 using Catalog.Application.Responses;
 using Catalog.Core.Entities;
 using Catalog.Core.Specifications;
@@ -30,4 +31,35 @@ public static class ProductMapper
             pagination.Count,
             pagination.Data.Select(x => x.ToResponse()).ToList()
         );
+
+    public static IList<ProductResponse> ToResponseList(this IEnumerable<Product> products)
+        => products.Select(x => x.ToResponse()).ToList();
+
+    public static Product ToEntity(this CreateProductDto dto, ProductBrand brand, ProductType type)
+        => new Product
+        {
+            Name = dto.Name,
+            Summary = dto.Summary,
+            Decription = dto.Description,
+            ImageFile = dto.ImageFile,
+            Brand = brand,
+            Type = type,
+            CreatedDate = DateTime.UtcNow,
+            Price = dto.Price
+        };
+
+
+    public static Product ToUpdatedEntity(this UpdateProductDto dto, Product existing, ProductBrand brand, ProductType type)
+        => new Product
+        {
+            Id = existing.Id,
+            Name = dto.Name,
+            Summary = dto.Summary,
+            Decription = dto.Description,
+            ImageFile = dto.ImageFile,
+            Brand = brand,
+            Type = type,
+            CreatedDate = existing.CreatedDate,
+            Price = dto.Price
+        };
 }

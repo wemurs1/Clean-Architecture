@@ -1,3 +1,4 @@
+using Catalog.Application.DTOs;
 using Catalog.Application.Responses;
 using Catalog.Core.Entities;
 
@@ -14,6 +15,12 @@ public static class BrandMapper
         };
     }
 
-    public static IList<BrandResponse> ToResponseList(this IEnumerable<ProductBrand> brands)
+    public static IEnumerable<BrandResponse> ToResponseList(this IEnumerable<ProductBrand> brands)
         => brands.Select(x => x.ToResponse()).ToList();
+
+    public static BrandDto ToDto(this BrandResponse response)
+        => new BrandDto(
+            Id: response.Id,
+            Name: response.Name
+        );
 }

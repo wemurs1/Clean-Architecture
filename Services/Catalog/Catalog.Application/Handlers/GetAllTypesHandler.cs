@@ -6,9 +6,9 @@ using MediatR;
 
 namespace Catalog.Application.Handlers;
 
-public class GetAllTypesHandler(ITypeRepository typeRepository) : IRequestHandler<GetAllTypesQuery, IList<TypeResponse>>
+public class GetAllTypesHandler(ITypeRepository typeRepository) : IRequestHandler<GetAllTypesQuery, IEnumerable<TypeResponse>>
 {
-    public async Task<IList<TypeResponse>> Handle(GetAllTypesQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<TypeResponse>> Handle(GetAllTypesQuery request, CancellationToken cancellationToken)
     {
         var typeList = await typeRepository.GetAllAsync();
         return typeList.ToResponseList();

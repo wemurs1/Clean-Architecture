@@ -8,5 +8,6 @@ public record ProductDto(
     string ImageFile,
     BrandDto Brand,
     TypeDto Type,
-    DateTimeOffset CreatedDate
+    DateTimeOffset CreatedDate,
+    decimal Price
 );

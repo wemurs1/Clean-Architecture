@@ -1,3 +1,4 @@
+using Catalog.Application.DTOs;
 using Catalog.Application.Responses;
 using Catalog.Core.Entities;
 
@@ -14,6 +15,12 @@ public static class TypeMapper
         };
     }
 
-    public static IList<TypeResponse> ToResponseList(this IEnumerable<ProductType> types)
+    public static IEnumerable<TypeResponse> ToResponseList(this IEnumerable<ProductType> types)
         => types.Select(x => x.ToResponse()).ToList();
+
+    public static TypeDto ToDto(this TypeResponse response)
+        => new TypeDto(
+            Id: response.Id,
+            Name: response.Name
+        );
 }

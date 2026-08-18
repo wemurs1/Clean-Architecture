@@ -1,3 +1,4 @@
+using Catalog.Application.Commands;
 using Catalog.Application.DTOs;
 using Catalog.Application.Responses;
 using Catalog.Core.Entities;
@@ -32,7 +33,7 @@ public static class ProductMapper
             pagination.Data.Select(x => x.ToResponse()).ToList()
         );
 
-    public static IList<ProductResponse> ToResponseList(this IEnumerable<Product> products)
+    public static IEnumerable<ProductResponse> ToResponseList(this IEnumerable<Product> products)
         => products.Select(x => x.ToResponse()).ToList();
 
     public static Product ToEntity(this CreateProductDto dto, ProductBrand brand, ProductType type)
@@ -62,4 +63,33 @@ public static class ProductMapper
             CreatedDate = existing.CreatedDate,
             Price = dto.Price
         };
+
+    public static ProductDto ToDto(this ProductResponse response)
+        => new ProductDto
+        (
+            Id: response.Id,
+            Name: response.Name,
+            Summary: response.Summary,
+            Description: response.Decription,
+            ImageFile: response.ImageFile,
+            Brand: new BrandDto(response.Brand.Id, response.Brand.Name),
+            Type: new TypeDto(response.Type.Id, response.Type.Name),
+            CreatedDate: response.CreatedDate,
+            Price: response.Price
+        );
+
+    public static Pagination<ProductDto> ToPaginatedDto(this Pagination<ProductResponse> response)
+        => new Pagination<ProductDto>
+        (
+            pageIndex: response.PageIndex,
+            pageSize: response.PageSize,
+            count: response.Count,
+            data: response.Data.Select(p => p.ToDto()).ToList()
+        );
+
+    public static UpdateProductCommand ToCommand(this UpdateProductDto dto, string productId)
+    {
+        dto.Id = productId;
+        return new UpdateProductCommand(dto);
+    }
 }

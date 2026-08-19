@@ -25,6 +25,7 @@ public class CatalogController(IMediator mediator) : ControllerBase
     {
         var query = new GetProductByIdQuery(id);
         var result = await mediator.Send(query);
+        if (result == null) return NotFound();
         return Ok(result.ToDto());
     }
 
@@ -81,7 +82,7 @@ public class CatalogController(IMediator mediator) : ControllerBase
         return Ok(typeDtoList);
     }
 
-    [HttpGet("/brands/{brand}", Name = "GetProductsByBrandName")]
+    [HttpGet("brands/{brand}", Name = "GetProductsByBrandName")]
     public async Task<ActionResult<IList<ProductDto>>> GetProductsByBrand(string brand)
     {
         var query = new GetProductByBrandQuery(brand);

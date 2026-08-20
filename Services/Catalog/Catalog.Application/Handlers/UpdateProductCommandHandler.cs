@@ -9,7 +9,7 @@ public class UpdateProductCommandHandler(IProductRepository productRepository) :
 {
     public async Task<bool> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
     {
-        var existing = await productRepository.GetByIdASync(command.Dto.Id) ?? throw new KeyNotFoundException($"Product with id {command.Dto.Id} not found");
+        var existing = await productRepository.GetByIdASync(command.Dto.Id!) ?? throw new KeyNotFoundException($"Product with id {command.Dto.Id} not found");
 
         var brand = await productRepository.GetBrandsByIdAsync(command.Dto.BrandId);
         var type = await productRepository.GetTypesByIdAsync(command.Dto.TypeId);

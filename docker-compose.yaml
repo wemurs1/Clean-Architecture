@@ -4,6 +4,9 @@ services:
   catalogdb:
     image: mongo
 
+  basketdb:
+    image: redis:latest
+
   catalog:
     image: ${DOCKER_REGISTRY-}catalog
     build:
@@ -18,3 +21,4 @@ services:
 
 volumes:
   mongo_data:
+  redis_data:

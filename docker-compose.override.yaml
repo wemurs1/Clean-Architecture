@@ -7,6 +7,14 @@ services:
     volumes:
       - mongo_data:/data/db
 
+  basketdb:
+    container_name: basketdb
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
   catalog:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -19,3 +27,15 @@ services:
       - catalogdb
     ports:
       - "8000:8080"
+
+  basket:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "CacheSettings__ConnectionString=basketdb:6379"
+      - "GrpcSettings__DiscountUrl=http://discount:8080"
+      - "EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672"
+      - "ElasticConfiguration__Uri=http://elasticsearch:9200"
+    depends_on:
+      - basketdb
+    ports:
+      - "8001:8080"

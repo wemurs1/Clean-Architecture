@@ -1,3 +1,9 @@
+using System.Reflection;
+using Basket.Application.Handlers;
+using Basket.Core.Repositories;
+using Basket.Infra.Repositories;
+using Basket.Infra.Settings;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,12 +12,34 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var assemblies = new Assembly[]
+{
+    Assembly.GetExecutingAssembly(),
+    typeof(CreateShoppingCartCommandHandler).Assembly
+};
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssemblies(assemblies);
+});
+builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection(nameof(CacheSettings)));
+
+builder.Services.AddStackExchangeRedisCache((options) =>
+{
+    options.Configuration = builder.Configuration[$"{nameof(CacheSettings)}:ConnectionString"];
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

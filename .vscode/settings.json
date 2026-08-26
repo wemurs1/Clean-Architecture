@@ -1,0 +1,5 @@
+{
+    "protobuf.protoc.path": "/home/dev/.config/Code/User/globalStorage/drblury.protobuf-vsc/bin/protoc",
+    "protobuf.buf.path": "/home/dev/.config/Code/User/globalStorage/drblury.protobuf-vsc/bin/buf",
+    "protobuf.externalLinter.bufPath": "/home/dev/.config/Code/User/globalStorage/drblury.protobuf-vsc/bin/buf"
+}

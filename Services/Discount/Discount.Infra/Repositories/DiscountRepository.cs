@@ -2,12 +2,13 @@ using Dapper;
 using Discount.Core.Entities;
 using Discount.Core.Repositories;
 using Discount.Infra.Settings;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Npgsql;
 
 namespace Discount.Infra.Repositories;
 
-public class DiscountRepository(IOptions<DatabaseSettings> databaseSettings) : IDiscountRepository
+public class DiscountRepository(IOptions<DatabaseSettings> databaseSettings, ILogger<DiscountRepository> logger) : IDiscountRepository
 {
     private readonly string _connectionString = databaseSettings.Value.ConnectionString;
 
@@ -38,6 +39,8 @@ public class DiscountRepository(IOptions<DatabaseSettings> databaseSettings) : I
             "SELECT * FROM Coupon WHERE ProductName = @ProductName",
             new { ProductName = productName }
         );
+        var message = productName + coupon == null ? ": not found" : ": found";
+        logger.LogInformation(message);
         return coupon ?? new Coupon
         {
             ProductName = "No Discount",

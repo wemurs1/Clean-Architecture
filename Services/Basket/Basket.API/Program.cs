@@ -1,8 +1,12 @@
 using System.Reflection;
+using Basket.Application.GrpcService;
 using Basket.Application.Handlers;
+using Basket.Application.Settings;
 using Basket.Core.Repositories;
 using Basket.Infra.Repositories;
 using Basket.Infra.Settings;
+using Discount.Grpc.Protos;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +30,13 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssemblies(assemblies);
 });
 builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection(nameof(CacheSettings)));
+builder.Services.Configure<GrpcSettings>(builder.Configuration.GetSection(nameof(GrpcSettings)));
+builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>((sp, config) =>
+{
+    var grpcSetting = sp.GetRequiredService<IOptions<GrpcSettings>>().Value;
+    config.Address = new Uri(grpcSetting.DiscountUrl);
+});
+builder.Services.AddScoped<DiscountGrpcService>();
 
 builder.Services.AddStackExchangeRedisCache((options) =>
 {

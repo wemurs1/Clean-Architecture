@@ -7,10 +7,11 @@ using MediatR;
 
 namespace Discount.API.Services;
 
-public class DiscountService(IMediator mediator) : DiscountProtoService.DiscountProtoServiceBase
+public class DiscountService(IMediator mediator, ILogger<DiscountService> logger) : DiscountProtoService.DiscountProtoServiceBase
 {
     public override async Task<CouponModel> GetDiscount(GetDiscountRequest request, ServerCallContext context)
     {
+        logger.LogInformation($"starting with '{request.ProductName}'");
         var query = new GetDiscountQuery(request.ProductName);
         var dto = await mediator.Send(query);
         if (dto == null) return null!;

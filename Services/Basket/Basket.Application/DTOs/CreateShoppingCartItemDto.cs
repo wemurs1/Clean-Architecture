@@ -1,9 +1,10 @@
 namespace Basket.Application.DTOs;
 
-public record CreateShoppingCartItemDto(
-    string ProductId,
-    string ProductName,
-    string ImageFile,
-    decimal Price,
-    int Quantity
-);
+public record CreateShoppingCartItemDto
+{
+    public required string ProductId { get; set; }
+    public required string ProductName { get; set; }
+    public required string ImageFile { get; set; }
+    public required decimal Price { get; set; }
+    public required int Quantity { get; set; }
+};

@@ -56,7 +56,7 @@ public static class DbExtensions
 
                 cmd.CommandText = @"
                     INSERT INTO Coupon(ProductName, Description, Amount)
-                    VALUES('Adidas Quick Force Badminton Shoes', 'Shoe Discount', 500)";
+                    VALUES('Adidas FIFA World Cup 2018 OMB Football', 'Football Discount', 500)";
                 cmd.ExecuteNonQuery();
 
                 cmd.CommandText = @"

@@ -1,23 +1,25 @@
+using Discount.Core.Entities;
+using Discount.Infra.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Npgsql;
 
 namespace Discount.Infra.Settings;
 
 public static class DbExtensions
 {
-    public static IHost MigrateDatabase(this IHost host)
+    public static async Task<IHost> MigrateDatabase(this IHost host)
     {
         using var scope = host.Services.CreateScope();
         var services = scope.ServiceProvider;
-        var logger = services.GetRequiredService<ILogger<DatabaseSettings>>();
-        var databaseSetting = services.GetRequiredService<IOptions<DatabaseSettings>>().Value;
+        var logger = services.GetRequiredService<ILogger<IHost>>();
+        var context = services.GetRequiredService<DiscountDbContext>();
         try
         {
             logger.LogInformation("Discount Db Migration Started");
-            ApplyMigration(databaseSetting.ConnectionString);
+            await ApplyMigration(context);
             logger.LogInformation("Discount Db Migration Completed");
         }
         catch (Exception ex)
@@ -28,41 +30,33 @@ public static class DbExtensions
         return host;
     }
 
-    private static void ApplyMigration(string connectionString)
+    private static async Task ApplyMigration(DiscountDbContext context)
     {
         var retry = 5;
         while (retry > 0)
         {
             try
             {
-                using var connection = new NpgsqlConnection(connectionString);
-                connection.Open();
+                await context.Database.MigrateAsync();
 
-                using var cmd = new NpgsqlCommand
+                if (!context.Coupons.Any())
                 {
-                    Connection = connection
-                };
-                cmd.CommandText = "DROP TABLE IF EXISTS Coupon";
-                cmd.ExecuteNonQuery();
-
-                cmd.CommandText = @"
-                    CREATE TABLE Coupon(
-                        Id SERIAL PRIMARY KEY,
-                        ProductName VARCHAR(500) NOT NULL,
-                        Description TEXT,
-                        Amount INT
-                    )";
-                cmd.ExecuteNonQuery();
-
-                cmd.CommandText = @"
-                    INSERT INTO Coupon(ProductName, Description, Amount)
-                    VALUES('Adidas FIFA World Cup 2018 OMB Football', 'Football Discount', 500)";
-                cmd.ExecuteNonQuery();
-
-                cmd.CommandText = @"
-                    INSERT INTO Coupon(ProductName, Description, Amount)
-                    VALUES('Yonex VCORE Pro 100 A Tennis Racquet (270gm, Strung)', 'Raquet Discount', 700)";
-                cmd.ExecuteNonQuery();
+                    var coupons = new Coupon[]
+                    {
+                        new() {
+                            ProductName="Adidas FIFA World Cup 2018 OMB Football",
+                            Description="Football Discount",
+                            Amount=500
+                        },
+                        new() {
+                            ProductName="Yonex VCORE Pro 100 A Tennis Racquet (270gm, Strung)",
+                            Description="Raquet Discount",
+                            Amount=700
+                        },
+                    };
+                    context.Coupons.AddRange(coupons);
+                    await context.SaveChangesAsync();
+                }
                 break;
             }
             catch (Exception)

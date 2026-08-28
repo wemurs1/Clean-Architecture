@@ -1,6 +1,7 @@
 using Discount.Core.Entities;
 using Discount.Core.Repositories;
 using Discount.Infra.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Discount.Infra.Repositories;
 
@@ -15,7 +16,7 @@ public class DiscountRepository(DiscountDbContext context) : IDiscountRepository
 
     public async Task<bool> DeleteDiscountAsync(string productName)
     {
-        var coupon = await context.Coupons.FindAsync(productName);
+        var coupon = await context.Coupons.FirstOrDefaultAsync(x => x.ProductName == productName);
         if (coupon == null) return false;
         context.Coupons.Remove(coupon);
         var affected = await context.SaveChangesAsync();
@@ -24,7 +25,7 @@ public class DiscountRepository(DiscountDbContext context) : IDiscountRepository
 
     public async Task<Coupon> GetDiscountAsync(string productName)
     {
-        var coupon = await context.Coupons.FindAsync(productName);
+        var coupon = await context.Coupons.FirstOrDefaultAsync(x => x.ProductName == productName);
         return coupon ?? new Coupon
         {
             ProductName = "No Discount",

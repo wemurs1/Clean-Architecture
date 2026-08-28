@@ -17,15 +17,15 @@ services:
     container_name: discountdb
     restart: always
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=Password@1
-      - POSTGRES_DB=DiscountDb
+      - "POSTGRES_USER=admin"
+      - "POSTGRES_PASSWORD=Password@1"
+      - "POSTGRES_DB=DiscountDb"
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin"]
+      test: [ "CMD-SHELL", "pg_isready -U admin" ]
       interval: 10s
       timeout: 5s
       retries: 5

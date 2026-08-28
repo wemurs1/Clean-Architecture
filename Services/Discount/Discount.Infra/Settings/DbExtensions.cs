@@ -19,7 +19,7 @@ public static class DbExtensions
         try
         {
             logger.LogInformation("Discount Db Migration Started");
-            await ApplyMigration(context);
+            await ApplyMigration(context, logger);
             logger.LogInformation("Discount Db Migration Completed");
         }
         catch (Exception ex)
@@ -30,14 +30,16 @@ public static class DbExtensions
         return host;
     }
 
-    private static async Task ApplyMigration(DiscountDbContext context)
+    private static async Task ApplyMigration(DiscountDbContext context, ILogger<IHost> logger)
     {
         var retry = 5;
         while (retry > 0)
         {
             try
             {
+                logger.LogInformation("Executing MigrateASync");
                 await context.Database.MigrateAsync();
+                logger.LogInformation("Executed MigrateASync");
 
                 if (!context.Coupons.Any())
                 {

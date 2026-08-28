@@ -58,7 +58,7 @@ services:
   discount:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "DatabaseSettings__ConnectionString=Server=discountdb;Port=5432;Database=DiscountDb;User Id=admin;Password=Password@1;"
+      - "ConnectionStrings__Default=Server=discountdb;Port=5432;Database=DiscountDb;User Id=admin;Password=Password@1;"
       - "ElasticConfiguration__Uri=http://elasticsearch:9200"
     ports:
       - "8002:8080"

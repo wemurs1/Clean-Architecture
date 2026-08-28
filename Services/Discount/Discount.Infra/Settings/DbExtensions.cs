@@ -61,8 +61,10 @@ public static class DbExtensions
                 }
                 break;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                logger.LogError(ex, ex.Message);
+                logger.LogError("Retry {retry}", retry);
                 retry--;
                 if (retry == 0) throw;
             }

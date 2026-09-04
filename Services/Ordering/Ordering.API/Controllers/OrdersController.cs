@@ -10,7 +10,7 @@ using Ordering.Application.Orders.UpdateOrder;
 namespace Ordering.API.Controllers;
 
 [ApiController]
-[Route("api/va/[controller]")]
+[Route("api/v1/[controller]")]
 public class OrdersController(
     CreateOrderCommandHandler createOrderCommandHandler,
     UpdateOrderCommandHandler updateOrderCommandHandler,

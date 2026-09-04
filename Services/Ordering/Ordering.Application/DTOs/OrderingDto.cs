@@ -1,6 +1,7 @@
 namespace Ordering.Application.DTOs;
 
 public record OrderDto(
+    int Id,
     string UserName,
     decimal TotalPrice,
     string FirstName,
@@ -12,6 +13,7 @@ public record OrderDto(
     string ZipCode,
     string CardName,
     string CardNumber,
+    string Expiration,
     string Cvv,
     int PaymentMethod
 );

@@ -32,4 +32,13 @@ public static class ShoppingCartMapper
             TotalPrice: response.TotalPrice
         );
     }
+
+    public static ShoppingCart ToEntity(this ShoppingCartResponse response)
+    {
+        return new ShoppingCart
+        {
+            UserName = response.UserName,
+            Items = response.Items.Select(item => item.ToEntity()).ToList()
+        };
+    }
 }
